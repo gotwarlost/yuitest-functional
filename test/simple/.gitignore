@@ -1,0 +1,5 @@
+coverage.json
+results.xml
+coverage/
+functional-test-case.js
+

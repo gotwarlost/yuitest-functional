@@ -1,0 +1,15 @@
+{
+    "name": "yuitest-functional",
+    "description": "YUI Test case subclass useful for functional testing",
+    "keywords": [ "YUI", "yuitest", "testing", "functional testing" ],
+    "version": "0.0.2",
+    "devDependencies": {
+        "istanbul": "*"
+    },
+    "scripts": {
+        "test": "./run-tests.sh"
+    },
+    "license": "BSD"
+}
+
+

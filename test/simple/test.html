@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <script src="http://yui.yahooapis.com/3.10.2/build/yui/yui-debug.js"></script>
+    <style>
+        .hide { display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>This is a test page</h1>
+
+    <a id='show-more'>More</a>
+    <p id='more' class='hide'>
+        <span>This is the para that should show 2 seconds after the link is clicked.</span>
+        <input id='foo'>
+    </p>
+    <p id='sentinel' class='hide'></p>
+    <p id='results'>
+    </p>
+
+    <script>
+        /*globals YUI, window */
+        YUI().use('node', 'event', function (Y) {
+            Y.on('domready', function () {
+                Y.one('#show-more').on('click', function () {
+                    window.setTimeout(function () {
+                        Y.one('#more').removeClass('hide');
+                    }, 2000);
+                });
+                Y.one('#sentinel').removeClass('hide');
+            });
+        });
+    </script>
+    <script>
+        YUI({ modules: { 'functional-test-case': './functional-test-case.js'} }).use('json', 'functional-test-case', function (Y) {
+            var runner = Y.Test.Runner;
+            runner.add(new Y.Test.FunctionalTestCase({
+                "testing basic stuff": function () {
+                    this.bar = 'baz';
+                    this.batch()
+                        .debug('Wait for sentinel')
+                        .waitForElement('#sentinel')
+                        .waitAndClick('#show-more')
+                        .waitForElement('#more')
+                        .setValue('#foo', 'bar')
+                        .debug('About to run assertions')
+                        .add(function assertions() {
+                            Y.Assert.areEqual('bar', Y.one('#foo').get('value'));
+                            Y.Assert.areEqual("This is the para that should show 2 seconds after the link is clicked.",
+                                Y.one("#more span").get("innerHTML"), "Para text must be same");
+                            console.log(this);
+                            Y.Assert.areEqual('baz', this.bar); //ensure functions bound to `this`
+                        })
+                        .run();
+                }
+            }));
+            runner.subscribe(runner.COMPLETE_EVENT, function onComplete(event) {
+                console.log(JSON.stringify(event.results));
+                Y.one('#results').set('innerHTML', Y.JSON.stringify(event.results, undefined, 4));
+                window.callPhantom({ results: Y.Test.TestFormat.JUnitXML(event.results), coverage: window.__coverage__ });
+            });
+            runner.run();
+        });
+    </script>
+</body>
+</html>
