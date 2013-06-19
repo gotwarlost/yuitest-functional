@@ -1,6 +1,8 @@
 yuitest-functional
 ==================
 
+[![Build Status](https://secure.travis-ci.org/gotwarlost/yuitest-functional.png)](http://travis-ci.org/gotwarlost/yuitest-functional)
+
 A `Y.Test.Case` subclass useful for functional tests, typically with `arrow`.
 
 Problem
